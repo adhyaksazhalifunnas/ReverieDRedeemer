@@ -13,7 +13,11 @@ public class PlayerController : MonoBehaviour
     
     private enum State { idle, running, jumping, falling, hurt}
     private State state = State.idle;
-   
+    private float initialYPosition;
+    private bool isFalling;
+    private float fallDuration = 0.3f;
+    private float currentFallTime;
+
     [SerializeField] private LayerMask ground;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpForce = 8f;
@@ -28,6 +32,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         coll = GetComponent<Collider2D>();
+        initialYPosition = transform.position.y;
     }
 
     private void Update()
@@ -35,9 +40,31 @@ public class PlayerController : MonoBehaviour
         if (state != State.hurt)
         {
             Movement();
+            CheckFalling();
         }
         AnimationState();
         anim.SetInteger("state", (int)state); //set animation
+    }
+
+    private void CheckFalling()
+    {
+        if (state == State.running || state == State.idle)
+        {
+            if (!coll.IsTouchingLayers(ground))
+            {
+                currentFallTime += Time.deltaTime;
+
+                if (currentFallTime >= fallDuration)
+                {
+                    state = State.falling;
+                    currentFallTime = 0f; // Reset the timer for the next use
+                }
+            }
+            else
+            {
+                currentFallTime = 0f; // Reset the timer when grounded
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
