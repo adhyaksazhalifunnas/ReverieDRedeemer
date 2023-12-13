@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float hurtForce = 5f;
     [SerializeField] private AudioSource cherry;
     [SerializeField] private AudioSource footstep;
+    [SerializeField] private AudioSource tookDamage;
 
     private void Start()
     {
@@ -93,7 +94,8 @@ public class PlayerController : MonoBehaviour
             else
             {
                 state = State.hurt;
-                if(other.gameObject.transform.position.x > transform.position.x)
+                tookDamage.Play();
+                if (other.gameObject.transform.position.x > transform.position.x)
                 {
                     //Enemy is right = damaged and bounce left
                     rb.velocity = new Vector2(-hurtForce, rb.velocity.y);
