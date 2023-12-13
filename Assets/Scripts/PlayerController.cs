@@ -57,6 +57,7 @@ public class PlayerController : MonoBehaviour
         {
             if (hit.collider.CompareTag("Ground") || hit.collider.CompareTag("Crate"))
             {
+                state = State.idle;
                 Color rayColor = Color.red; // Visualize the ray in the Scene view for debugging
                 Debug.DrawRay(coll.bounds.center, Vector2.down * (coll.bounds.extents.y + extraHeight), rayColor);
 
@@ -65,21 +66,6 @@ public class PlayerController : MonoBehaviour
         }
 
         return false; // Return false if no collision with "Ground" tag is found
-    }
-
-    private bool IsTouchingCrate()
-    {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.5f); // Adjust the radius as needed
-
-        foreach (Collider2D collider in colliders)
-        {
-            if (collider.CompareTag("Crate"))
-            {
-                return true; // Return true if the player is touching an object tagged as "Crate"
-            }
-        }
-
-        return false; // Return false if no collision with "Crate" tag is found
     }
 
     private void CheckFalling()
@@ -157,7 +143,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (state == State.falling)
         {
-            if (coll.IsTouchingLayers(ground) || IsTouchingCrate())
+            if (IsGrounded())
             {
                 state = State.idle;
             }
@@ -173,7 +159,6 @@ public class PlayerController : MonoBehaviour
         {
             state = State.running;
         }
-
         else
         {
             state = State.idle;
