@@ -11,8 +11,15 @@ public class GameSetManagement : MonoBehaviour
 
     public GameObject firstBg;
     public GameObject secondBg;
+    public GameObject firstFg;
+    public GameObject secondFg;
+    public GameObject firstWall;
+    public GameObject secondWall;
 
     bool isfirstBgRendered = true;
+    bool isfirstFgRendered = true;
+    bool isfirstWallRendered = true;
+
 
     void Start()
     {
@@ -22,6 +29,10 @@ public class GameSetManagement : MonoBehaviour
 
         firstBg.SetActive(true);
         secondBg.SetActive(false);
+        firstFg.SetActive(true);
+        secondFg.SetActive(false);
+        firstWall.SetActive(true);
+        secondWall.SetActive(false);
     }
 
     void Update()
@@ -37,13 +48,25 @@ public class GameSetManagement : MonoBehaviour
                 firstBg.SetActive(false);
                 secondBg.SetActive(true);
             }
-/*            else
+            if (isfirstFgRendered)
             {
-                firstBg.SetActive(true);
-                secondBg.SetActive(false);
-            }*/
+                firstFg.SetActive(false);
+                secondFg.SetActive(true);
+            }
+            if (isfirstWallRendered)
+            {
+                firstWall.SetActive(false);
+                secondWall.SetActive(true);
+            }
+            /*            else
+                        {
+                            firstBg.SetActive(true);
+                            secondBg.SetActive(false);
+                        }*/
 
             isfirstBgRendered = !isfirstBgRendered;
+            isfirstFgRendered = !isfirstFgRendered;
+            isfirstWallRendered = !isfirstWallRendered;
 
             Destroy(this.gameObject);
         }

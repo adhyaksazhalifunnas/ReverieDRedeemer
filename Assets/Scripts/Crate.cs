@@ -6,11 +6,11 @@ public class CrateController : MonoBehaviour
 {
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetButtonDown("Fire1"))
         {
             ChangeCrateProperties(1f); // Set crate mass to 1 when 'J' key is pressed and enable movement
         }
-        else if (Input.GetKeyUp(KeyCode.J))
+        else if (Input.GetButtonUp("Fire1"))
         {
             ChangeCrateProperties(100f); // Revert crate mass to 100 when 'J' key is released and disable movement
         }

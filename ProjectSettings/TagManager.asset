@@ -7,6 +7,7 @@ TagManager:
   - Collectables
   - Enemies
   - Ground
+  - Crate
   layers:
   - Default
   - TransparentFX
@@ -52,4 +53,7 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 2212330435
+    locked: 0
+  - name: UI
+    uniqueID: 4268697325
     locked: 0

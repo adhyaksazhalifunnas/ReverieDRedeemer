@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class PlayerController : MonoBehaviour
@@ -169,7 +170,9 @@ public class PlayerController : MonoBehaviour
     {
         float movement = Input.GetAxis("Horizontal");
         float jump = Input.GetAxis("Vertical");
-
+        bool jump2 = Input.GetButtonDown("Jump");
+        bool reset = Input.GetButtonDown("Submit");
+        
         //Move left
         if (movement < 0)
         {
@@ -190,9 +193,14 @@ public class PlayerController : MonoBehaviour
         }
 
         //JUMPING
-        if (jump > 0 && IsGrounded())
+        if ((jump > 0 && IsGrounded()) || (jump2 == true && IsGrounded()))
         {
             Jump();
+        }
+
+        if (reset == true)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
