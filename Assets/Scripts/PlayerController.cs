@@ -20,12 +20,13 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private LayerMask ground;
     [SerializeField] private float speed = 5f;
-    [SerializeField] private float jumpForce = 8f;
+    [SerializeField] private float jumpForce = 9.8f;
     [SerializeField] private int cherries = 0;
     [SerializeField] private TextMeshProUGUI cherryText;
     [SerializeField] private float hurtForce = 5f;
     [SerializeField] private AudioSource cherry;
     [SerializeField] private AudioSource footstep;
+    [SerializeField] private AudioSource tookDamage;
 
     private void Start()
     {
@@ -64,6 +65,21 @@ public class PlayerController : MonoBehaviour
         }
 
         return false; // Return false if no collision with "Ground" tag is found
+    }
+
+    private bool IsTouchingCrate()
+    {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.5f); // Adjust the radius as needed
+
+        foreach (Collider2D collider in colliders)
+        {
+            if (collider.CompareTag("Crate"))
+            {
+                return true; // Return true if the player is touching an object tagged as "Crate"
+            }
+        }
+
+        return false; // Return false if no collision with "Crate" tag is found
     }
 
     private void CheckFalling()
@@ -113,7 +129,8 @@ public class PlayerController : MonoBehaviour
             else
             {
                 state = State.hurt;
-                if(other.gameObject.transform.position.x > transform.position.x)
+                tookDamage.Play();
+                if (other.gameObject.transform.position.x > transform.position.x)
                 {
                     //Enemy is right = damaged and bounce left
                     rb.velocity = new Vector2(-hurtForce, rb.velocity.y);
@@ -140,7 +157,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (state == State.falling)
         {
-            if(coll.IsTouchingLayers(ground))
+            if (coll.IsTouchingLayers(ground) || IsTouchingCrate())
             {
                 state = State.idle;
             }
