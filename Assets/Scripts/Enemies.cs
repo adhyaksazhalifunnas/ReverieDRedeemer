@@ -27,7 +27,8 @@ public class Enemies : MonoBehaviour
         anim.SetTrigger("Death");
         death.Play();
         rb.velocity = new Vector2(0, 0);
-
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        GetComponent<Collider2D>().enabled = false;
     }
 
     private void Death()

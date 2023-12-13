@@ -26,7 +26,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float hurtForce = 5f;
     [SerializeField] private AudioSource cherry;
     [SerializeField] private AudioSource footstep;
-    [SerializeField] private AudioSource tookDamage;
 
     private void Start()
     {
@@ -44,7 +43,27 @@ public class PlayerController : MonoBehaviour
             CheckFalling();
         }
         AnimationState();
-        anim.SetInteger("state", (int)state); //set animation
+        anim.SetInteger("state", (int)state); // Set animation state
+    }
+
+    private bool IsGrounded()
+    {
+        float extraHeight = 0.1f; // Add a small extra raycast height to check if grounded
+
+        RaycastHit2D[] hits = Physics2D.RaycastAll(coll.bounds.center, Vector2.down, coll.bounds.extents.y + extraHeight);
+
+        foreach (RaycastHit2D hit in hits)
+        {
+            if (hit.collider.CompareTag("Ground") || hit.collider.CompareTag("Crate"))
+            {
+                Color rayColor = Color.red; // Visualize the ray in the Scene view for debugging
+                Debug.DrawRay(coll.bounds.center, Vector2.down * (coll.bounds.extents.y + extraHeight), rayColor);
+
+                return true; // Return true if the raycast hits an object with the "Ground" tag
+            }
+        }
+
+        return false; // Return false if no collision with "Ground" tag is found
     }
 
     private void CheckFalling()
@@ -94,8 +113,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 state = State.hurt;
-                tookDamage.Play();
-                if (other.gameObject.transform.position.x > transform.position.x)
+                if(other.gameObject.transform.position.x > transform.position.x)
                 {
                     //Enemy is right = damaged and bounce left
                     rb.velocity = new Vector2(-hurtForce, rb.velocity.y);
@@ -170,7 +188,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //JUMPING
-        if (jump > 0 && coll.IsTouchingLayers(ground))
+        if (jump > 0 && IsGrounded())
         {
             Jump();
         }
